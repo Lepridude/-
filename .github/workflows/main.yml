@@ -1,15 +1,24 @@
-name: Telegram Test
+name: REA Monitor
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 */4 * * *"
 
 jobs:
-  send-message:
+  monitor:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send Telegram message
-        run: |
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-          -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-          -d text="✅ GitHub Actions подключен! Тестовое сообщение отправлено."
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        run: python main.py
