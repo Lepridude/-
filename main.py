@@ -13,11 +13,8 @@ for row in rows:
         f"👤 Код: {row['unique_code_profile']}\n"
         f"📍 Место: {row['rating']}\n"
         f"🎯 Приоритет: {row['priority']}\n"
-        f"📊 Баллы ЕГЭ: {row['entrance_test_mark']}\n"
         f"🏅 ИД: {row['achievements_mark']}\n"
         f"📈 Сумма: {row['sum_mark']}\n"
-        f"📄 Статус: {row['application_status'] or '—'}\n"
-        f"📝 Согласие: {'Да' if row['agreement'] else 'Нет'}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
 
