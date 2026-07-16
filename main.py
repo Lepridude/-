@@ -5,6 +5,16 @@ rows = get_all_my_data()
 
 for row in rows:
     group = get_group_info(row["competitive_group_id"])
+    group_name = group.get("competitive_group_name", "")
+
+    group_name = group_name.replace("РФ", "")
+    group_name = group_name.replace("только РФ", "")
+    group_name = group_name.replace("Очная", "")
+    group_name = group_name.replace("ВШКМиС", "")
+    group_name = group_name.replace("РЭУ", "")
+    group_name = group_name.replace("Москва", "")
+
+    group_name = " ".join(group_name.split())
 
     if group:
         group_name = group.get("competitive_group_name", "Неизвестное направление")
