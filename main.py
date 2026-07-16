@@ -3,19 +3,21 @@ from telegram import send
 
 rows = get_all_my_data()
 
-text = "🏛 РЭУ Плеханова\n\n"
-
 for row in rows:
     group = get_group_info(row["competitive_group_id"])
 
-    text += (
-        f"DEBUG:\n{group}\n\n"
-        f"👤 Код: {row['unique_code_profile']}\n"
+    if group:
+        group_name = group.get("competitive_group_name", "Неизвестное направление")
+    else:
+        group_name = "Неизвестное направление"
+
+    text = (
+        "🏛 РЭУ Плеханова\n\n"
+        f"📚 {group_name}\n"
         f"📍 Место: {row['rating']}\n"
         f"🎯 Приоритет: {row['priority']}\n"
         f"🏅 ИД: {row['achievements_mark']}\n"
         f"📈 Сумма: {row['sum_mark']}\n"
-        "━━━━━━━━━━━━━━\n\n"
     )
 
-send(text)
+    send(text)
