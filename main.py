@@ -3,23 +3,22 @@ from telegram import send
 
 rows = get_all_my_data()
 
-if not rows:
-    send("❌ Не найдено ни одного направления.")
-    raise SystemExit
-
 text = "🏛 РЭУ Плеханова\n\n"
 
 for row in rows:
     group = get_group_info(row["competitive_group_id"])
 
-    if group:
-        text += (
-            f"📚 {group['speciality_name']}\n"
-            f"🏫 {group['faculty_name']}\n"
-            f"📍 Место: {row['rating']}\n"
-            f"🎯 Приоритет: {row['priority']}\n"
-            f"📊 Баллы: {row['sum_mark']}\n"
-            f"📄 Статус: {row['application_status'] or '—'}\n\n"
-        )
+    text += (
+        f"DEBUG:\n{group}\n\n"
+        f"👤 Код: {row['unique_code_profile']}\n"
+        f"📍 Место: {row['rating']}\n"
+        f"🎯 Приоритет: {row['priority']}\n"
+        f"📊 Баллы ЕГЭ: {row['entrance_test_mark']}\n"
+        f"🏅 ИД: {row['achievements_mark']}\n"
+        f"📈 Сумма: {row['sum_mark']}\n"
+        f"📄 Статус: {row['application_status'] or '—'}\n"
+        f"📝 Согласие: {'Да' if row['agreement'] else 'Нет'}\n"
+        "━━━━━━━━━━━━━━\n\n"
+    )
 
 send(text)
