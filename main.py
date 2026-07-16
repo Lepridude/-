@@ -1,3 +1,3 @@
-from rea import get_my_data
+from rea import get_all_my_data
 
-print(get_my_data())
+print(get_all_my_data())
