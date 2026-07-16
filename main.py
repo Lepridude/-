@@ -1,3 +1,5 @@
+import re
+
 from rea import get_all_my_data, get_group_info
 from telegram import send
 
@@ -18,6 +20,10 @@ for row in rows:
         group_name = group_name.replace("РЭУ", "")
         group_name = group_name.replace("Москва", "")
 
+        # Убираем подряд идущие запятые
+        group_name = re.sub(r"(,\s*)+", ", ", group_name)
+
+        # Убираем пробелы и запятые по краям
         group_name = " ".join(group_name.split()).strip(" ,-()")
     else:
         group_name = "Неизвестное направление"
