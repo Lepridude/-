@@ -1,11 +1,23 @@
-import requests
+from rea import get_my_data
+from telegram import send
 
-url = "https://abitrating.rea.ru/group/6c2f167c-11ad-11f1-8dba-5cba2c649f58?profile=2162745"
+row = get_my_data()
 
-response = requests.get(url, timeout=30)
+if row is None:
+    send("❌ Не удалось найти твой код в рейтинге.")
+    raise SystemExit
 
-print("Status:", response.status_code)
-print("Length:", len(response.text))
+text = f"""🏛 РЭУ
 
-with open("page.html", "w", encoding="utf-8") as f:
-    f.write(response.text)
+👤 Код: {row['unique_code_profile']}
+
+📍 Место: {row['rating']}
+
+🎯 Приоритет: {row['priority']}
+
+📊 Баллы: {row['entrance_test_mark']}
+
+📄 Статус: {row['application_status']}
+"""
+
+send(text)
