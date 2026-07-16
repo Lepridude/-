@@ -1,6 +1,6 @@
 {
   "rea": {
-    "jwt": "ВСТАВЬ_СЮДА_СВОЙ_JWT",
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzgwNjQxOTU0LCJleHAiOjIwOTYwMDE5NTR9.HK1E0UwpIPbIHK-C1HtCjoiszflge1Ul8gfD7DPicXQ",
     "profile": "2164745",
     "competitive_group_id": "663540a3-11ad-11f1-8dba-5cba2c649f58"
   }
