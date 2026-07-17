@@ -53,8 +53,8 @@ def get_group_info(url):
 
                 result["my"] = {
                     "place": cols[0],
-                    "code": cols[1],
-                    "sum": cols[3],
+                    "id": cols[1],
+                    "scores": cols[3],
                     "priority": cols[-1]
                 }
 
