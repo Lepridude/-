@@ -1,35 +1,61 @@
+import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 
 
-url = "https://abitur.mtuci.ru/ranked_lists/spisok.php?valueSearch=2164745&priznakViev=budg&levelTarget=bak_main&form=%D0%9E%D1%87%D0%BD%D0%B0%D1%8F&originalFilter=&search_type=uniqueID&originalView=all"
+MY_CODE = "2164745"
 
 
-r = requests.get(
-    url,
-    headers={
-        "User-Agent": "Mozilla/5.0"
-    },
-    timeout=30
-)
+def get_group_info(url):
 
-
-print("STATUS:", r.status_code)
-print("РАЗМЕР HTML:", len(r.text))
-
-print("КОД В HTML:", "2164745" in r.text)
-
-
-soup = BeautifulSoup(r.text, "html.parser")
-
-
-print("ТАБЛИЦ:", len(soup.find_all("table")))
-print("СТРОК TR:", len(soup.find_all("tr")))
-
-
-# первые найденные строки
-for i, row in enumerate(soup.find_all("tr")[:10]):
-    print(
-        i,
-        row.get_text(" ", strip=True)
+    r = requests.get(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0"
+        },
+        timeout=30
     )
+
+    r.raise_for_status()
+
+    result = {
+        "direction": "МТУСИ",
+        "my": None
+    }
+
+    tables = pd.read_html(r.text)
+
+    print("ТАБЛИЦ НАЙДЕНО:", len(tables))
+
+    for i, df in enumerate(tables):
+
+        print("ТАБЛИЦА", i)
+        print(df.head())
+
+        text = df.to_string()
+
+        if MY_CODE in text:
+
+            print("НАШЕЛ МОЙ КОД")
+
+            row = df[df.astype(str).apply(
+                lambda x: x.str.contains(MY_CODE).any(),
+                axis=1
+            )].iloc[0]
+
+
+            values = row.tolist()
+
+            print(values)
+
+
+            result["my"] = {
+                "place": values[0],
+                "id": MY_CODE,
+                "scores": values[3] if len(values) > 3 else "-",
+                "priority": values[-1] if len(values) else "-"
+            }
+
+            break
+
+
+    return result
