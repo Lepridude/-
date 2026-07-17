@@ -1,3 +1,6 @@
+import os
+print(os.listdir())
+
 import re
 
 from misis import get_group_info as get_misis_group
