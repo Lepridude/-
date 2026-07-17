@@ -26,43 +26,46 @@ def get_group_info(url):
 
     table = soup.find("table")
 
+    if table is None:
+        print("ТАБЛИЦА НЕ НАЙДЕНА")
+        return {
+            "direction": "МТУСИ",
+            "my": None
+        }
+
+
+    rows = table.find_all("tr")
+
     result = {
         "direction": "МТУСИ",
         "my": None
     }
 
-    if not table:
-        print("ТАБЛИЦА НЕ НАЙДЕНА")
-        return result
 
-
-    rows = table.find_all("tr")
-
-
-    for row in rows:
+    for index, row in enumerate(rows):
 
         cols = [
             td.get_text(" ", strip=True)
             for td in row.find_all("td")
         ]
 
-        if cols:
-            print("MTUCI COLS:", cols)
+
+        if MY_CODE not in cols:
+            continue
 
 
-        if MY_CODE in cols:
+        print("MTUCI COLS:", cols)
 
-            print("НАШЕЛ МОЙ КОД")
 
-            result["my"] = {
-                "place": cols[0],
-                "scores": cols,
-                "id": None,
-                "priority": None,
-                "to_pass": "-"
-            }
+        result["my"] = {
+            "place": cols[0],
+            "scores": cols[3],
+            "id": cols[8] if len(cols) > 8 else "-",
+            "priority": cols[9] if len(cols) > 9 else "-",
+        }
 
-            break
+
+        break
 
 
     return result
