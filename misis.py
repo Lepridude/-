@@ -25,15 +25,18 @@ def get_group_info(group_id: str):
         headers=HEADERS,
         timeout=30,
     )
+
     r.raise_for_status()
 
     soup = BeautifulSoup(r.text, "html.parser")
 
     table = soup.find("table")
+
     if table is None:
         raise RuntimeError("Таблица не найдена")
 
     tbody = table.find("tbody")
+
     if tbody is None:
         raise RuntimeError("Тело таблицы не найдено")
 
@@ -55,10 +58,30 @@ def get_group_info(group_id: str):
         if not cols or MY_CODE not in cols:
             continue
 
+
         place = int(cols[0])
         priority = int(cols[3])
-        achievements = int(cols[4])
-        scores = int(cols[5])
+
+
+        # ищем баллы и ИД
+        numbers = []
+
+        for x in cols:
+            try:
+                numbers.append(int(x))
+            except:
+                pass
+
+
+        scores = max(numbers)
+
+        achievements = 0
+
+        for x in numbers:
+            if x < scores and x <= 20:
+                achievements = x
+                break
+
 
         result["my"] = {
             "place": place,
