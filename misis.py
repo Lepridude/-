@@ -67,26 +67,33 @@ def get_group_info(group_id: str):
 
         # сохраняем всю строку для проверки
         print("MISIS COLS:", cols)
+                result["my"] = {
+            "place": int(cols[0]),
+            "priority": cols[3],
+            "scores": cols[4],
+            "id": None,
+            "to_pass": int(cols[0]) - result["places"],
+        }
 
 
-        result["my"] = {
-        "place": int(cols[0]),
-        "priority": cols[3],
-    
-        "id": next(
-            (x for x in cols if x.isdigit() and int(x) < 100),
-            "0"
-        ),
-    
-        "scores": next(
-            (x for x in reversed(cols) if x.isdigit() and int(x) >= 200),
-            "0"
-        ),
-    
-        "to_pass": int(cols[0]) - result["places"],
-    }
+        # ищем ИД
+        for i, value in enumerate(cols):
+            try:
+                num = int(value)
 
-        break
+                # ИД обычно находится после блока предметов,
+                # а не в начале таблицы
+                if i > 5 and num <= 10:
+                    result["my"]["id"] = value
+                    break
+
+            except:
+                pass
+
+
+        if result["my"]["id"] is None:
+            result["my"]["id"] = "0"
+        
 
 
     return result
