@@ -186,3 +186,4 @@ if mtuci["my"]:
 
 else:
     text += "❌ МТУСИ: данные не найдены\n\n"
+send(text)
