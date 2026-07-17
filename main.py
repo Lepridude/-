@@ -10,6 +10,10 @@ rows = get_all_my_data()
 text = "🏛 РЭУ Плеханова\n\n"
 
 
+# =========================
+# РЭУ
+# =========================
+
 for row in rows:
     group = get_group_info(row["competitive_group_id"])
 
@@ -29,14 +33,8 @@ for row in rows:
         group_name = re.sub(r"(,\s*)+", ", ", group_name)
         group_name = " ".join(group_name.split()).strip(" ,-()")
 
-        places = group.get("places", 0)
-
     else:
         group_name = "Неизвестное направление"
-        places = 0
-
-
-    to_pass = row["rating"] - places if places else "-"
 
 
     text += (
@@ -45,10 +43,13 @@ for row in rows:
         f"🎯 Приоритет: {row['priority']}\n"
         f"🏅 ИД: {row['achievements_mark']}\n"
         f"📈 Сумма: {row['sum_mark']}\n"
-        f"🎓 Мест: {places}\n"
-        f"📉 До прохода: {to_pass}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
+
+
+# =========================
+# МИСИС
+# =========================
 
 text += "🏛 МИСИС\n\n"
 
