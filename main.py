@@ -81,6 +81,14 @@ text += "🏛 МИСИС\n\n"
 
 
 groups = [
+    # =====================
+    # БЮДЖЕТ
+    # =====================
+
+    {
+        "id": "BVO-BUDJ-O-010304-NITU_MISIS-OKM-000006850",
+        "type": "Бюджет"
+    },
     {
         "id": "BVO-BUDJ-O-090000-NITU_MISIS-OKM-000006867",
         "type": "Бюджет"
@@ -93,9 +101,27 @@ groups = [
         "id": "BVO-BUDJ-O-380305-NITU_MISIS-OKM-000007050",
         "type": "Бюджет"
     },
+
+
+    # =====================
+    # КОНТРАКТ
+    # =====================
+
     {
-        "id": "BVO-BUDJ-O-010304-NITU_MISIS-OKM-000006850",
-        "type": "Бюджет"
+        "id": "BVO-COMM-O-010304-NITU_MISIS-OKM-000006848",
+        "type": "Контракт"
+    },
+    {
+        "id": "BVO-COMM-O-090000-NITU_MISIS-OKM-000006865",
+        "type": "Контракт"
+    },
+    {
+        "id": "BVO-COMM-O-270303-NITU_MISIS-OKM-000007068",
+        "type": "Контракт"
+    },
+    {
+        "id": "BVO-COMM-O-380305-NITU_MISIS-OKM-000007048",
+        "type": "Контракт"
     },
 ]
 
