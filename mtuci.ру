@@ -1,0 +1,80 @@
+import requests
+from bs4 import BeautifulSoup
+
+
+MY_CODE = "ТВОЙ_УНИКАЛЬНЫЙ_КОД"
+
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 Chrome/138 Safari/537.36"
+    )
+}
+
+
+def get_group_info(url):
+
+    r = requests.get(
+        url,
+        headers=HEADERS,
+        timeout=30
+    )
+
+    r.raise_for_status()
+
+    soup = BeautifulSoup(r.text, "html.parser")
+
+
+    table = soup.find("table")
+
+    if not table:
+        raise Exception("Таблица не найдена")
+
+
+    rows = table.find_all("tr")
+
+
+    result = {
+        "direction": "МТУСИ",
+        "places": 0,
+        "my": None
+    }
+
+
+    for index, row in enumerate(rows):
+
+        cols = [
+            x.get_text(" ", strip=True)
+            for x in row.find_all(["td","th"])
+        ]
+
+
+        if not cols:
+            continue
+
+
+        if MY_CODE in cols:
+
+
+            result["my"] = {
+
+                "place": index,
+
+                # сумма баллов
+                "scores": cols[3],
+
+                # ИД
+                "id": cols[8],
+
+                # приоритет
+                "priority": cols[9],
+
+                "to_pass": "-"
+            }
+
+
+            break
+
+
+    return result
