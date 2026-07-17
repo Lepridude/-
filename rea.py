@@ -11,7 +11,6 @@ headers = {
 
 
 def get_all_my_data():
-    # Ищем все направления, где есть твой код
     r = requests.get(
         "https://abitrating.rea.ru/rest/v1/entrants",
         headers=headers,
@@ -25,6 +24,7 @@ def get_all_my_data():
 
     r.raise_for_status()
     return r.json()
+
 
 def get_group_info(group_id):
     r = requests.get(
@@ -45,10 +45,18 @@ def get_group_info(group_id):
         group = data[0]
 
         return {
-            "name": group.get("competitive_group_name", ""),
-            "places": group.get("budget_places")
-            or group.get("places")
-            or 0,
+            # оставляем старое название, чтобы main не ломался
+            "competitive_group_name": group.get(
+                "competitive_group_name",
+                ""
+            ),
+
+            # новое поле для мест
+            "places": (
+                group.get("budget_places")
+                or group.get("places")
+                or 0
+            )
         }
 
     return None
