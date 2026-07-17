@@ -35,20 +35,12 @@ def get_group_info(group_id: str):
     if table is None:
         raise RuntimeError("Таблица не найдена")
 
-    tbody = table.find("tbody")
-
-    if tbody is None:
-        raise RuntimeError("Тело таблицы не найдено")
-
-    rows = tbody.find_all("tr")
-
-    direction = soup.find("direction").get_text(strip=True)
-    places = int(soup.find("itog").get_text(strip=True))
+    rows = table.find("tbody").find_all("tr")
 
     result = {
         "update_time": soup.find("date").get_text(strip=True),
-        "direction": direction,
-        "places": places,
+        "direction": soup.find("direction").get_text(strip=True),
+        "places": int(soup.find("itog").get_text(strip=True)),
         "my": None,
     }
 
@@ -58,37 +50,15 @@ def get_group_info(group_id: str):
         if not cols or MY_CODE not in cols:
             continue
 
-
-        place = int(cols[0])
-        priority = int(cols[3])
-
-
-        # ищем баллы и ИД
-        numbers = []
-
-        for x in cols:
-            try:
-                numbers.append(int(x))
-            except:
-                pass
-
-
-        scores = max(numbers)
-
-        achievements = 0
-
-        for x in numbers:
-            if x < scores and x <= 20:
-                achievements = x
-                break
-
-
         result["my"] = {
-            "place": place,
-            "priority": priority,
-            "id": achievements,
-            "scores": scores,
-            "to_pass": place - places,
+            "place": int(cols[0]),
+            "priority": int(cols[3]),
+
+            # пока временно возвращаем старые индексы
+            "id": cols[4],
+            "scores": cols[5],
+
+            "to_pass": int(cols[0]) - result["places"],
         }
 
         break
