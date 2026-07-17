@@ -22,12 +22,29 @@ def get_group_info(url):
 
     r.raise_for_status()
 
+    print("STATUS:", r.status_code)
+    print("LENGTH:", len(r.text))
+
     soup = BeautifulSoup(r.text, "html.parser")
 
-    table = soup.find("table")
+
+    tables = soup.find_all("table")
+
+    print("TABLE COUNT:", len(tables))
+
+
+    table = None
+
+    for t in tables:
+        txt = t.get_text(" ", strip=True)
+
+        if MY_CODE in txt:
+            table = t
+            break
+
 
     if table is None:
-        print("ТАБЛИЦА НЕ НАЙДЕНА")
+        print("МОЯ ТАБЛИЦА НЕ НАЙДЕНА")
         return {
             "direction": "МТУСИ",
             "my": None
@@ -35,6 +52,7 @@ def get_group_info(url):
 
 
     rows = table.find_all("tr")
+
 
     result = {
         "direction": "МТУСИ",
@@ -50,7 +68,7 @@ def get_group_info(url):
         ]
 
 
-        if MY_CODE not in cols:
+        if not any(MY_CODE in x for x in cols):
             continue
 
 
@@ -59,7 +77,7 @@ def get_group_info(url):
 
         result["my"] = {
             "place": cols[0],
-            "scores": cols[3],
+            "scores": cols[3] if len(cols) > 3 else "-",
             "id": cols[8] if len(cols) > 8 else "-",
             "priority": cols[9] if len(cols) > 9 else "-",
         }
