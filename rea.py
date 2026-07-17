@@ -42,21 +42,6 @@ def get_group_info(group_id):
     data = r.json()
 
     if data:
-        group = data[0]
-
-        return {
-            # оставляем старое название, чтобы main не ломался
-            "competitive_group_name": group.get(
-                "competitive_group_name",
-                ""
-            ),
-
-            # новое поле для мест
-            "places": (
-                group.get("budget_places")
-                or group.get("places")
-                or 0
-            )
-        }
+        return data[0]
 
     return None
