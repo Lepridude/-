@@ -18,8 +18,7 @@ for row in rows:
     group = get_group_info(row["competitive_group_id"])
 
     if group:
-        group_name = group.get("competitive_group_name", "")
-
+        group_name = str(group)
         group_name = group_name.replace("Только", "")
         group_name = group_name.replace("только РФ", "")
         group_name = group_name.replace("РФ", "")
