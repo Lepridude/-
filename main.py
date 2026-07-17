@@ -1,3 +1,16 @@
+import sys
+import os
+
+print(os.getcwd())
+print(os.listdir())
+print(sys.path)
+
+import mtuci
+
+print("MTUCI OK")
+
+
+
 import os
 print(os.listdir())
 
