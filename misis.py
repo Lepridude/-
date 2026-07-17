@@ -70,16 +70,21 @@ def get_group_info(group_id: str):
 
 
         result["my"] = {
-            "place": int(cols[0]),
-            "priority": cols[3],
-
-            # здесь временно оставляем,
-            # после проверки COLS будет точная позиция
-            "id": cols[4],
-            "scores": cols[5],
-
-            "to_pass": int(cols[0]) - result["places"],
-        }
+        "place": int(cols[0]),
+        "priority": cols[3],
+    
+        "id": next(
+            (x for x in cols if x.isdigit() and int(x) < 100),
+            "0"
+        ),
+    
+        "scores": next(
+            (x for x in reversed(cols) if x.isdigit() and int(x) >= 200),
+            "0"
+        ),
+    
+        "to_pass": int(cols[0]) - result["places"],
+    }
 
         break
 
