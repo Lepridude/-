@@ -1,21 +1,6 @@
 import sys
 import os
-
-print(os.getcwd())
-print(os.listdir())
-print(sys.path)
-
-import mtuci
-
-print("MTUCI OK")
-
-
-
-import os
-print(os.listdir())
-
 import re
-
 from misis import get_group_info as get_misis_group
 from rea import get_all_my_data, get_group_info
 from telegram import send
@@ -173,8 +158,12 @@ text += "🏛 МТУСИ\n\n"
 
 mtuci_url = (
     "https://abitur.mtuci.ru/ranked_lists/spisok.php?"
-    "valueSearch=&levelTarget=bak_main&"
+    "valueSearch=2164745&"
     "priznakViev=budg&"
+    "levelTarget=bak_main&"
+    "form=%D0%9E%D1%87%D0%BD%D0%B0%D1%8F&"
+    "originalFilter=&"
+    "search_type=uniqueID&"
     "originalView=all"
 )
 
@@ -195,4 +184,5 @@ if mtuci["my"]:
         "━━━━━━━━━━━━━━\n\n"
     )
 
-send(text)
+else:
+    text += "❌ МТУСИ: данные не найдены\n\n"
