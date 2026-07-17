@@ -10,26 +10,46 @@ def get_group_info(url):
         "my": None
     }
 
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+
+        browser = p.chromium.launch(
+            headless=True
+        )
 
         page = browser.new_page()
 
-        page.goto(url, wait_until="networkidle")
+        page.goto(
+            url,
+            wait_until="networkidle",
+            timeout=60000
+        )
 
-        html = page.content()
 
-        print("CODE:", MY_CODE in html)
+        # ждём пока появятся строки
+        page.wait_for_timeout(3000)
 
-        rows = page.locator("tr").all()
 
-        for row in rows:
+        rows = page.locator("tr")
+
+        count = rows.count()
+
+        print("TR COUNT:", count)
+
+
+        for i in range(count):
+
+            row = rows.nth(i)
+
             text = row.inner_text()
 
+
             if MY_CODE in text:
+
                 cols = row.locator("td").all_inner_texts()
 
-                print("НАЙДЕНА:", cols)
+                print("MTUCI FOUND:", cols)
+
 
                 result["my"] = {
                     "place": cols[0],
@@ -38,8 +58,11 @@ def get_group_info(url):
                     "priority": cols[-1]
                 }
 
+
                 break
 
+
         browser.close()
+
 
     return result
