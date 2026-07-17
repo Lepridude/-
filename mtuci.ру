@@ -2,8 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-MY_CODE = "ТВОЙ_УНИКАЛЬНЫЙ_КОД"
-
+MY_CODE = "2164745"
 
 HEADERS = {
     "User-Agent": (
@@ -25,19 +24,19 @@ def get_group_info(url):
 
     soup = BeautifulSoup(r.text, "html.parser")
 
-
     table = soup.find("table")
 
     if not table:
-        raise Exception("Таблица не найдена")
+        return {
+            "direction": "МТУСИ",
+            "my": None
+        }
 
 
     rows = table.find_all("tr")
 
-
     result = {
         "direction": "МТУСИ",
-        "places": 0,
         "my": None
     }
 
@@ -45,34 +44,19 @@ def get_group_info(url):
     for index, row in enumerate(rows):
 
         cols = [
-            x.get_text(" ", strip=True)
-            for x in row.find_all(["td","th"])
+            td.get_text(" ", strip=True)
+            for td in row.find_all("td")
         ]
-
-
-        if not cols:
-            continue
-
 
         if MY_CODE in cols:
 
-
             result["my"] = {
-
                 "place": index,
-
-                # сумма баллов
                 "scores": cols[3],
-
-                # ИД
                 "id": cols[8],
-
-                # приоритет
                 "priority": cols[9],
-
                 "to_pass": "-"
             }
-
 
             break
 
