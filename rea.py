@@ -1,30 +1,10 @@
 import json
 import requests
-def get_group_info(group_id):
-    r = requests.get(
-        "https://abitrating.rea.ru/rest/v1/competitive_groups",
-        headers=headers,
-        params={
-            "select": "*",
-            "id": f"eq.{group_id}"
-        },
-        timeout=30
-    )
 
-    r.raise_for_status()
-
-    data = r.json()
-
-    print("GROUP ID:", group_id)
-    print("DATA:", data)
-
-    if data:
-        return data[0]
-
-    return None
 
 with open("config.json", "r", encoding="utf-8") as f:
     cfg = json.load(f)["rea"]
+
 
 headers = {
     "apikey": cfg["jwt"],
@@ -62,6 +42,9 @@ def get_group_info(group_id):
     r.raise_for_status()
 
     data = r.json()
+
+    print("GROUP ID:", group_id)
+    print("DATA:", data)
 
     if data:
         return data[0]
