@@ -4,54 +4,20 @@ from bs4 import BeautifulSoup
 
 MY_CODE = "2164745"
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 Chrome/138 Safari/537.36"
-    )
-}
-
 
 def get_group_info(url):
 
     r = requests.get(
         url,
-        headers=HEADERS,
+        headers={
+            "User-Agent": "Mozilla/5.0"
+        },
         timeout=30
     )
 
     r.raise_for_status()
 
-    print("STATUS:", r.status_code)
-    print("LENGTH:", len(r.text))
-
     soup = BeautifulSoup(r.text, "html.parser")
-
-
-    tables = soup.find_all("table")
-
-    print("TABLE COUNT:", len(tables))
-
-
-    table = None
-
-    for t in tables:
-        txt = t.get_text(" ", strip=True)
-
-        if MY_CODE in txt:
-            table = t
-            break
-
-
-    if table is None:
-        print("МОЯ ТАБЛИЦА НЕ НАЙДЕНА")
-        return {
-            "direction": "МТУСИ",
-            "my": None
-        }
-
-
-    rows = table.find_all("tr")
 
 
     result = {
@@ -60,7 +26,7 @@ def get_group_info(url):
     }
 
 
-    for index, row in enumerate(rows):
+    for row in soup.find_all("tr"):
 
         cols = [
             td.get_text(" ", strip=True)
@@ -68,22 +34,24 @@ def get_group_info(url):
         ]
 
 
-        if not any(MY_CODE in x for x in cols):
+        if not cols:
             continue
 
 
-        print("MTUCI COLS:", cols)
+        if MY_CODE in cols:
+
+            print("MTUCI COLS:", cols)
 
 
-        result["my"] = {
-            "place": cols[0],
-            "scores": cols[3] if len(cols) > 3 else "-",
-            "id": cols[8] if len(cols) > 8 else "-",
-            "priority": cols[9] if len(cols) > 9 else "-",
-        }
+            result["my"] = {
+                "place": cols[0] if len(cols) > 0 else "-",
+                "id": cols[2] if len(cols) > 2 else "-",
+                "scores": cols[3] if len(cols) > 3 else "-",
+                "priority": cols[9] if len(cols) > 9 else "-"
+            }
 
 
-        break
+            break
 
 
     return result
