@@ -171,18 +171,18 @@ for group in groups:
 text += "🏛 МТУСИ\n\n"
 
 
-mtuci_groups = [
-    "ТВОЯ_ССЫЛКА_1",
-    "ТВОЯ_ССЫЛКА_2",
-]
+mtuci_url = (
+    "https://abitur.mtuci.ru/ranked_lists/spisok.php?"
+    "valueSearch=&levelTarget=bak_main&"
+    "priznakViev=budg&"
+    "originalView=all"
+)
 
 
-for url in mtuci_groups:
+mtuci = get_mtuci_group(mtuci_url)
 
-    mtuci = get_mtuci_group(url)
 
-    if not mtuci["my"]:
-        continue
+if mtuci["my"]:
 
     me = mtuci["my"]
 
