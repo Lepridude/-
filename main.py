@@ -16,6 +16,7 @@ text = "🏛 РЭУ Плеханова\n\n"
 
 for row in rows:
     group = get_group_info(row["competitive_group_id"])
+    print("GROUP FROM REA:", group)
 
     if group:
         group_name = str(group)
