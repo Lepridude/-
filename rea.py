@@ -34,7 +34,7 @@ def get_group_info(group_id):
         headers=headers,
         params={
             "select": "*",
-            "id": f"eq.{group_id}"
+            "competitive_group_id": f"eq.{group_id}"
         },
         timeout=30
     )
@@ -42,9 +42,6 @@ def get_group_info(group_id):
     r.raise_for_status()
 
     data = r.json()
-
-    print("GROUP ID:", group_id)
-    print("DATA:", data)
 
     if data:
         return data[0]
