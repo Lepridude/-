@@ -26,8 +26,7 @@ def get_group_info(url):
         )
 
 
-        # ждём пока появятся строки
-        page.wait_for_timeout(3000)
+        page.locator(f"td:has-text('{MY_CODE}')").first.wait_for(timeout=30000)
 
 
         rows = page.locator("tr")
@@ -53,9 +52,9 @@ def get_group_info(url):
 
                 result["my"] = {
                     "place": cols[0],
-                    "id": cols[1],
+                    "id": cols[7],
                     "scores": cols[3],
-                    "priority": cols[-1]
+                    "priority": cols[9]
                 }
 
 
