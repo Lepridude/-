@@ -53,7 +53,6 @@ def get_group_info(group_id: str):
     }
 
 
-    # ищем мою строку
     for row in rows:
 
         cols = [
@@ -65,9 +64,10 @@ def get_group_info(group_id: str):
             continue
 
 
-        # сохраняем всю строку для проверки
         print("MISIS COLS:", cols)
-                result["my"] = {
+
+
+        result["my"] = {
             "place": int(cols[0]),
             "priority": cols[3],
             "scores": cols[4],
@@ -76,24 +76,25 @@ def get_group_info(group_id: str):
         }
 
 
-        # ищем ИД
+        # ищем колонку ИД
         for i, value in enumerate(cols):
+
             try:
                 num = int(value)
 
-                # ИД обычно находится после блока предметов,
-                # а не в начале таблицы
                 if i > 5 and num <= 10:
                     result["my"]["id"] = value
                     break
 
-            except:
+            except ValueError:
                 pass
 
 
         if result["my"]["id"] is None:
             result["my"]["id"] = "0"
-        
+
+
+        break
 
 
     return result
