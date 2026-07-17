@@ -20,6 +20,9 @@ def get_group_info(url):
     }
 
     r = requests.get(url, headers=HEADERS, timeout=30)
+    print("MTUCI STATUS:", r.status_code)
+    print("MTUCI URL:", r.url)
+    print("MTUCI HTML[:500]:", r.text[:500])
     r.raise_for_status()
 
     soup = BeautifulSoup(r.text, "html.parser")
