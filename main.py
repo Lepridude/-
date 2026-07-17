@@ -1,4 +1,5 @@
 import re
+
 from misis import get_group_info as get_misis_group
 from rea import get_all_my_data, get_group_info
 from telegram import send
@@ -35,13 +36,22 @@ for row in rows:
         f"📈 Сумма: {row['sum_mark']}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
+
 text += "🏛 МИСИС\n\n"
 
-misis = get_misis_group(
-    "BVO-BUDJ-O-090000-NITU_MISIS-OKM-000006867"
-)
+groups = [
+    "BVO-BUDJ-O-090000-NITU_MISIS-OKM-000006867",
+    "BVO-BUDJ-O-270303-NITU_MISIS-OKM-000007070",
+    "BVO-BUDJ-O-380305-NITU_MISIS-OKM-000007050",
+    "BVO-BUDJ-O-010304-NITU_MISIS-OKM-000006850",
+]
 
-if misis["my"]:
+for group_id in groups:
+    misis = get_misis_group(group_id)
+
+    if not misis["my"]:
+        continue
+
     me = misis["my"]
 
     text += (
@@ -52,6 +62,5 @@ if misis["my"]:
         f"📈 Сумма: {me['scores']}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
-else:
-    text += "❌ Не найден в списке\n\n"
+
 send(text)
