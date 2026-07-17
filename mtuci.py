@@ -24,14 +24,12 @@ def get_group_info(url):
 
     soup = BeautifulSoup(r.text, "html.parser")
 
-    for table in soup.find_all("table"):
+    tables = soup.find_all("table")
+    print("MTUCI TABLES:", len(tables))
 
-        tbody = table.find("tbody")
+    for table in tables:
 
-        if not tbody:
-            continue
-
-        for row in tbody.find_all("tr"):
+        for row in table.find_all("tr"):
 
             cols = [td.get_text(strip=True) for td in row.find_all("td")]
 
