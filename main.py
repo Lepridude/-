@@ -19,7 +19,9 @@ import re
 from misis import get_group_info as get_misis_group
 from rea import get_all_my_data, get_group_info
 from telegram import send
-from mtuci import get_group_info as get_mtuci_group
+import mtuci
+
+get_mtuci_group = mtuci.get_group_info
 
 
 def clean_name(name):
