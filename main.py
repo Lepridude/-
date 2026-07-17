@@ -4,15 +4,22 @@ from misis import get_group_info as get_misis_group
 from rea import get_all_my_data, get_group_info
 from telegram import send
 
+
 rows = get_all_my_data()
 
 text = "🏛 РЭУ Плеханова\n\n"
+
+
+# =========================
+# РЭУ
+# =========================
 
 for row in rows:
     group = get_group_info(row["competitive_group_id"])
 
     if group:
-        group_name = group.get("competitive_group_name", "")
+        group_name = group.get("name", "")
+
         group_name = group_name.replace("Только", "")
         group_name = group_name.replace("только РФ", "")
         group_name = group_name.replace("РФ", "")
@@ -25,8 +32,16 @@ for row in rows:
 
         group_name = re.sub(r"(,\s*)+", ", ", group_name)
         group_name = " ".join(group_name.split()).strip(" ,-()")
+
+        places = group.get("places", 0)
+
     else:
         group_name = "Неизвестное направление"
+        places = 0
+
+
+    to_pass = row["rating"] - places if places else "-"
+
 
     text += (
         f"📚 {group_name}\n"
@@ -34,28 +49,51 @@ for row in rows:
         f"🎯 Приоритет: {row['priority']}\n"
         f"🏅 ИД: {row['achievements_mark']}\n"
         f"📈 Сумма: {row['sum_mark']}\n"
+        f"🎓 Мест: {places}\n"
+        f"📉 До прохода: {to_pass}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
 
+
+# =========================
+# МИСИС
+# =========================
+
 text += "🏛 МИСИС\n\n"
 
+
 groups = [
-    "BVO-BUDJ-O-090000-NITU_MISIS-OKM-000006867",
-    "BVO-BUDJ-O-270303-NITU_MISIS-OKM-000007070",
-    "BVO-BUDJ-O-380305-NITU_MISIS-OKM-000007050",
-    "BVO-BUDJ-O-010304-NITU_MISIS-OKM-000006850",
+    {
+        "id": "BVO-BUDJ-O-090000-NITU_MISIS-OKM-000006867",
+        "type": "Бюджет"
+    },
+    {
+        "id": "BVO-BUDJ-O-270303-NITU_MISIS-OKM-000007070",
+        "type": "Бюджет"
+    },
+    {
+        "id": "BVO-BUDJ-O-380305-NITU_MISIS-OKM-000007050",
+        "type": "Бюджет"
+    },
+    {
+        "id": "BVO-BUDJ-O-010304-NITU_MISIS-OKM-000006850",
+        "type": "Бюджет"
+    },
 ]
 
-for group_id in groups:
-    misis = get_misis_group(group_id)
+
+for group in groups:
+
+    misis = get_misis_group(group["id"])
 
     if misis["my"] is None:
         continue
 
     me = misis["my"]
 
+
     text += (
-        f"📚 {misis['direction']}\n"
+        f"📚 {misis['direction']} — {group['type']}\n"
         f"📍 Место: {me['place']}\n"
         f"🎯 Приоритет: {me['priority']}\n"
         f"🏅 ИД: {me['id']}\n"
@@ -64,5 +102,6 @@ for group_id in groups:
         f"📉 До прохода: {me['to_pass']}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
+
 
 send(text)
