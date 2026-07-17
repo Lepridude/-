@@ -1,61 +1,45 @@
-import pandas as pd
-import requests
-
+from playwright.sync_api import sync_playwright
 
 MY_CODE = "2164745"
 
 
 def get_group_info(url):
 
-    r = requests.get(
-        url,
-        headers={
-            "User-Agent": "Mozilla/5.0"
-        },
-        timeout=30
-    )
-
-    r.raise_for_status()
-
     result = {
         "direction": "МТУСИ",
         "my": None
     }
 
-    tables = pd.read_html(r.text)
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
 
-    print("ТАБЛИЦ НАЙДЕНО:", len(tables))
+        page = browser.new_page()
 
-    for i, df in enumerate(tables):
+        page.goto(url, wait_until="networkidle")
 
-        print("ТАБЛИЦА", i)
-        print(df.head())
+        html = page.content()
 
-        text = df.to_string()
+        print("CODE:", MY_CODE in html)
 
-        if MY_CODE in text:
+        rows = page.locator("tr").all()
 
-            print("НАШЕЛ МОЙ КОД")
+        for row in rows:
+            text = row.inner_text()
 
-            row = df[df.astype(str).apply(
-                lambda x: x.str.contains(MY_CODE).any(),
-                axis=1
-            )].iloc[0]
+            if MY_CODE in text:
+                cols = row.locator("td").all_inner_texts()
 
+                print("НАЙДЕНА:", cols)
 
-            values = row.tolist()
+                result["my"] = {
+                    "place": cols[0],
+                    "code": cols[1],
+                    "sum": cols[3],
+                    "priority": cols[-1]
+                }
 
-            print(values)
+                break
 
-
-            result["my"] = {
-                "place": values[0],
-                "id": MY_CODE,
-                "scores": values[3] if len(values) > 3 else "-",
-                "priority": values[-1] if len(values) else "-"
-            }
-
-            break
-
+        browser.close()
 
     return result
