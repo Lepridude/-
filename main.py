@@ -3,6 +3,7 @@ import re
 from misis import get_group_info as get_misis_group
 from rea import get_all_my_data, get_group_info
 from telegram import send
+from mtuci import get_group_info as get_mtuci_group
 
 
 def clean_name(name):
@@ -147,5 +148,33 @@ for group in groups:
         "━━━━━━━━━━━━━━\n\n"
     )
 
+
+
+text += "🏛 МТУСИ\n\n"
+
+
+mtuci_groups = [
+    "ТВОЯ_ССЫЛКА_1",
+    "ТВОЯ_ССЫЛКА_2",
+]
+
+
+for url in mtuci_groups:
+
+    mtuci = get_mtuci_group(url)
+
+    if not mtuci["my"]:
+        continue
+
+    me = mtuci["my"]
+
+    text += (
+        f"📚 {mtuci['direction']}\n"
+        f"📍 Место: {me['place']}\n"
+        f"🎯 Приоритет: {me['priority']}\n"
+        f"🏅 ИД: {me['id']}\n"
+        f"📈 Баллы: {me['scores']}\n"
+        "━━━━━━━━━━━━━━\n\n"
+    )
 
 send(text)
