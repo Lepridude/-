@@ -29,6 +29,11 @@ jobs:
         pip install -r requirements.txt
 
 
+    - name: Install Playwright browser
+      run: |
+        playwright install chromium
+
+
     - name: Run monitor
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
