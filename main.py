@@ -49,7 +49,7 @@ groups = [
 for group_id in groups:
     misis = get_misis_group(group_id)
 
-    if not misis["my"]:
+    if misis["my"] is None:
         continue
 
     me = misis["my"]
@@ -59,7 +59,9 @@ for group_id in groups:
         f"📍 Место: {me['place']}\n"
         f"🎯 Приоритет: {me['priority']}\n"
         f"🏅 ИД: {me['id']}\n"
-        f"📈 Сумма: {me['scores']}\n"
+        f"📈 Баллы: {me['scores']}\n"
+        f"🎓 Мест: {misis['places']}\n"
+        f"📉 До прохода: {me['to_pass']}\n"
         "━━━━━━━━━━━━━━\n\n"
     )
 
