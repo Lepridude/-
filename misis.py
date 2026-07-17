@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 BASE_URL = (
     "https://misis.ru/applicants/admission/progress/"
     "baccalaureate-and-specialties/"
@@ -19,6 +20,7 @@ HEADERS = {
 
 
 def get_group_info(group_id: str):
+
     r = requests.get(
         BASE_URL,
         params={"id": group_id},
@@ -35,7 +37,13 @@ def get_group_info(group_id: str):
     if table is None:
         raise RuntimeError("Таблица не найдена")
 
-    rows = table.find("tbody").find_all("tr")
+    tbody = table.find("tbody")
+
+    if tbody is None:
+        raise RuntimeError("tbody не найден")
+
+    rows = tbody.find_all("tr")
+
 
     result = {
         "update_time": soup.find("date").get_text(strip=True),
@@ -44,17 +52,29 @@ def get_group_info(group_id: str):
         "my": None,
     }
 
+
+    # ищем мою строку
     for row in rows:
-        cols = [td.get_text(" ", strip=True) for td in row.find_all("td")]
+
+        cols = [
+            td.get_text(" ", strip=True)
+            for td in row.find_all("td")
+        ]
 
         if not cols or MY_CODE not in cols:
             continue
 
+
+        # сохраняем всю строку для проверки
+        print("MISIS COLS:", cols)
+
+
         result["my"] = {
             "place": int(cols[0]),
-            "priority": int(cols[3]),
+            "priority": cols[3],
 
-            # пока временно возвращаем старые индексы
+            # здесь временно оставляем,
+            # после проверки COLS будет точная позиция
             "id": cols[4],
             "scores": cols[5],
 
@@ -62,5 +82,6 @@ def get_group_info(group_id: str):
         }
 
         break
+
 
     return result
