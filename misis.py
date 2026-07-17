@@ -70,28 +70,37 @@ def get_group_info(group_id: str):
         result["my"] = {
             "place": int(cols[0]),
             "priority": cols[3],
-            "scores": cols[4],
-            "id": None,
+            "scores": 0,
+            "id": 0,
             "to_pass": int(cols[0]) - result["places"],
         }
 
 
-        # ищем колонку ИД
+        # ищем баллы и ИД по колонкам
         for i, value in enumerate(cols):
+
+            if i < 4:
+                continue
 
             try:
                 num = int(value)
-
-                if i > 5 and num <= 10:
-                    result["my"]["id"] = value
-                    break
-
-            except ValueError:
-                pass
+            except:
+                continue
 
 
-        if result["my"]["id"] is None:
-            result["my"]["id"] = "0"
+            # общий конкурсный балл
+            if num >= 100 and result["my"]["scores"] == 0:
+                result["my"]["scores"] = num
+                continue
+
+
+            # ИД обычно маленькое число после баллов
+            if (
+                result["my"]["scores"] > 0
+                and 0 <= num <= 10
+                and result["my"]["id"] == 0
+            ):
+                result["my"]["id"] = num
 
 
         break
