@@ -32,7 +32,7 @@ def get_group_info(group_id):
         headers=headers,
         params={
             "select": "*",
-            "competitive_group_id": f"eq.{group_id}"
+            "id": f"eq.{group_id}"
         },
         timeout=30
     )
@@ -42,6 +42,13 @@ def get_group_info(group_id):
     data = r.json()
 
     if data:
-        return data[0]
+        group = data[0]
+
+        return {
+            "name": group.get("competitive_group_name", ""),
+            "places": group.get("budget_places")
+            or group.get("places")
+            or 0,
+        }
 
     return None
